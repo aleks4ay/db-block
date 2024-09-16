@@ -1,0 +1,23 @@
+
+mybatis:
+  mapper-locations: classpath*:com/aleks4ay/persistence/mapper/*.xml
+  config-location: classpath:persistence/config/mybatis-config-db.xml
+  type-aliases-package: com.aleks4ay.*.persistence.entity
+  type-handlers-package: com.aleks4ay.*.persistence.handler
+#mybatis:
+#  mapper-locations: classpath*:com/fuib/digitalbank/transformer/*/persistence/*.xml
+#  config-location: classpath:persistence/config/mybatis-config-db.xml
+#  type-aliases-package: com.fuib.digitalbank.transformer.*.model.dto
+#  type-handlers-package: com.fuib.digitalbank.transformer.*.persistence.handler
+
+spring:
+  datasource:
+#    url: ${DATASOURCE_URL:jdbc:sqlserver://localhost:1433;databaseName=ALEX_MSSQL}
+    url: ${DATASOURCE_URL:jdbc:sqlserver://localhost:1433;databaseName=FUIB_VEGA}
+    username: ${DATASOURCE_LOGIN:sa}
+    password: ${DATASOURCE_PASSWORD:sa}
+    type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
+
+logging:
+  level:
+    root: ${APP_LOG_LEVEL:INFO}

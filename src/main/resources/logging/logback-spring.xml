@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+    <springProfile name="local,dev,test,generate-api">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    </springProfile>
+
+    <springProperty scope="context" name="appVersion" source="info.app.version"/>
+    <springProperty scope="context" name="appName" source="info.app.name"/>
+
+    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%date{yyyy-MM-dd'T'HH:mm:ss.SSSZZ}",
+                        "trace": "%X{X-B3-TraceId:-}",
+                        "span": "%X{X-B3-SpanId:-}",
+                        "app_name": "${appName:-}",
+                        "project_version": "${appVersion:-}",
+                        "level": "%level",
+                        "class": "%logger{40}",
+                        "thread": "%thread",
+                        "message": "%message",
+                        "app_chanel": "%X{X-Systemcode}",
+                        "x_flow_id": "%X{X-Flow-ID}"
+                        }
+                    </pattern>
+                </pattern>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter"/>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+
+    <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <springProfile name="prod">
+        <root level="ALL">
+            <appender-ref ref="jsonConsoleAppender"/>
+        </root>
+    </springProfile>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+</configuration>
